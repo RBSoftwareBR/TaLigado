@@ -1,0 +1,55 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:imoveis/Telas/Home/Home.dart';
+import 'package:imoveis/Telas/Login/CadastroEmail/CadastroEmail.dart';
+import 'package:imoveis/Telas/Login/CadastroEmail/EsqueceuSenha.dart';
+import 'package:imoveis/Telas/Login/CadastroTelefone/CadastroTelefone.dart';
+import 'package:imoveis/Telas/Login/Login.dart';
+import 'package:imoveis/Telas/Login/LoginEmail/LoginEmail.dart';
+import 'package:imoveis/Telas/Login/LoginTelefone/LoginTelefone.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
+  @override
+  Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(statusBarColor: Colors.blue));
+    return MaterialApp(
+      title: 'Imoveis',
+      debugShowCheckedModeBanner: false,
+      routes: <String, WidgetBuilder>{
+        '/loginemail': (BuildContext context) => LoginEmail(),
+        '/logintelefone': (BuildContext context) => LoginTelefone(),
+        '/home': (BuildContext context) => Home(),
+        '/login': (BuildContext context) => Login(),
+        '/cadastroemail': (BuildContext context) => CadastroEmail(),
+        '/cadastrotelefone': (BuildContext context) => CadastroTelefone(),
+        '/esqueceusenha': (BuildContext context) => EsqueceuSenha(),
+      },
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.blue,
+      ),
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
+      home: Login(),
+    );
+  }
+}

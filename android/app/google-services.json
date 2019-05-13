@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "149903286255",
+    "firebase_url": "https://imoveis-a4321.firebaseio.com",
+    "project_id": "imoveis-a4321",
+    "storage_bucket": "imoveis-a4321.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149903286255:android:f88d02a286624afc",
+        "android_client_info": {
+          "package_name": "com.rbsoftware.imoveis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149903286255-iauh6a8mf46rs0j8k3aunrr37l1ke61m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr2c9gzFw3ElQ5HTIOq4Z5IzQhkn_fRpY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149903286255-iauh6a8mf46rs0j8k3aunrr37l1ke61m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
