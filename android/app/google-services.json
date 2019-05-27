@@ -1,16 +1,16 @@
 {
   "project_info": {
     "project_number": "149903286255",
-    "firebase_url": "https://imoveis-a4321.firebaseio.com",
-    "project_id": "imoveis-a4321",
-    "storage_bucket": "imoveis-a4321.appspot.com"
+    "firebase_url": "https://kivaga-a4321.firebaseio.com",
+    "project_id": "kivaga-a4321",
+    "storage_bucket": "kivaga-a4321.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:149903286255:android:f88d02a286624afc",
         "android_client_info": {
-          "package_name": "com.rbsoftware.imoveis"
+          "package_name": "com.rbsoftware.kivaga"
         }
       },
       "oauth_client": [

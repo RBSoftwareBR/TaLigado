@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class DatabaseClient {
   static final DatabaseClient _singleton = new DatabaseClient._internal();
@@ -19,7 +20,7 @@ class DatabaseClient {
 
   Database _db;
 
-  Future<Database> get db async{
+  Future<Database> get db async {
     if (_db == null) {
       await create();
     }
@@ -28,10 +29,9 @@ class DatabaseClient {
 
   Future<Database> create() async {
     Directory path = await getApplicationDocumentsDirectory();
-    String dbPath = join(path.path, "imoveis_db.db");
+    String dbPath = join(path.path, "kivaga_db.db");
 
-    return openDatabase(dbPath, version: 9, onUpgrade: (d, o, n) {
-    }, onOpen: (d) {
-    });
+    return openDatabase(dbPath,
+        version: 9, onUpgrade: (d, o, n) {}, onOpen: (d) {});
   }
 }

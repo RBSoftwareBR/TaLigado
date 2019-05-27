@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:http/http.dart' as http;
-import 'package:imoveis/Helpers/Helper.dart';
+import 'package:kivaga/Helpers/Helper.dart';
 
 Future<Token> getToken() async {
   Stream<String> onCode = await _server();

@@ -1,4 +1,4 @@
-package com.rbsoftware.imoveis
+package com.rbsoftware.kivaga
 
 import android.os.Bundle
 
