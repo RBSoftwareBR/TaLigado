@@ -30,6 +30,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   Animation<Offset> _slideAnimation;
 
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  var page0,page1,page2,page3;
 
   @override
   void initState() {
