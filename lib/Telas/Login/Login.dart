@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
-import 'package:imoveis/Helpers/features/widget/CustomButton.dart';
-import 'package:imoveis/Telas/Login/LoginController.dart';
+import 'package:kivaga/Helpers/features/widget/CustomButton.dart';
+import 'package:kivaga/Telas/Login/LoginController.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class Login extends StatelessWidget {

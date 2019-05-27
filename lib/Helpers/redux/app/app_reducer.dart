@@ -1,4 +1,4 @@
-import 'package:imoveis/Helpers/redux/app/app_state.dart';
+import 'package:kivaga/Helpers/redux/app/app_state.dart';
 
 ///register all the Reducer here
 ///auto add new reducer when using haystack plugin

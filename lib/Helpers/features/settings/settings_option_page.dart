@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:imoveis/Helpers/features/settings/settings_option.dart';
-import 'package:imoveis/Helpers/features/settings/text_scale.dart';
-import 'package:imoveis/Helpers/features/settings/theme.dart';
+import 'package:kivaga/Helpers/features/settings/settings_option.dart';
+import 'package:kivaga/Helpers/features/settings/text_scale.dart';
+import 'package:kivaga/Helpers/features/settings/theme.dart';
 
 const double _kItemHeight = 48.0;
 

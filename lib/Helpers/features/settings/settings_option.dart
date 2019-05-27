@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:imoveis/Helpers/features/settings/text_scale.dart';
+import 'package:kivaga/Helpers/features/settings/text_scale.dart';
 
 class SettingsOptions {
   SettingsOptions({

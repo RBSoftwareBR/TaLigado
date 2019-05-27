@@ -2,13 +2,13 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:imoveis/Telas/Home/Home.dart';
-import 'package:imoveis/Telas/Login/CadastroEmail/CadastroEmail.dart';
-import 'package:imoveis/Telas/Login/CadastroEmail/EsqueceuSenha.dart';
-import 'package:imoveis/Telas/Login/CadastroTelefone/CadastroTelefone.dart';
-import 'package:imoveis/Telas/Login/Login.dart';
-import 'package:imoveis/Telas/Login/LoginEmail/LoginEmail.dart';
-import 'package:imoveis/Telas/Login/LoginTelefone/LoginTelefone.dart';
+import 'package:kivaga/Telas/Home/Home.dart';
+import 'package:kivaga/Telas/Login/CadastroEmail/CadastroEmail.dart';
+import 'package:kivaga/Telas/Login/CadastroEmail/EsqueceuSenha.dart';
+import 'package:kivaga/Telas/Login/CadastroTelefone/CadastroTelefone.dart';
+import 'package:kivaga/Telas/Login/Login.dart';
+import 'package:kivaga/Telas/Login/LoginEmail/LoginEmail.dart';
+import 'package:kivaga/Telas/Login/LoginTelefone/LoginTelefone.dart';
 
 void main() => runApp(MyApp());
 
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.blue));
     return MaterialApp(
-      title: 'Imoveis',
+      title: 'kivaga',
       debugShowCheckedModeBanner: false,
       routes: <String, WidgetBuilder>{
         '/loginemail': (BuildContext context) => LoginEmail(),
