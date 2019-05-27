@@ -7,6 +7,7 @@ class PagesController implements BlocBase {
   Stream<int> get outPageController => _controllerPage.stream;
 
   Sink<int> get inPageController => _controllerPage.sink;
+
   @override
   void dispose() {
     _controllerPage.close();

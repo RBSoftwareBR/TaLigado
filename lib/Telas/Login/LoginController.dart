@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
@@ -8,12 +9,13 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:kivaga/Helpers/Helper.dart';
 import 'package:kivaga/Helpers/Instagram.dart';
-import 'package:kivaga/Helpers/data/model/User.dart';
+import 'package:kivaga/Objetos/User.dart';
 import 'package:rxdart/subjects.dart';
 
 class LoginController implements BlocBase {
   BehaviorSubject<User> _UserController = new BehaviorSubject<User>();
   static final FacebookLogin facebookSignIn = new FacebookLogin();
+  final databaseReference = Firestore.instance.collection('Users').reference();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
     signInOption: SignInOption.standard,
@@ -33,8 +35,12 @@ class LoginController implements BlocBase {
     });*/
   }
 
+  onError(err) {
+    print('Error: ${err.toString()}');
+  }
+
   Future LoginGoogle() async {
-    _googleSignIn.signIn().then((googleUser) async {
+    return _googleSignIn.signIn().then((googleUser) async {
       print(googleUser.toString());
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
@@ -51,7 +57,24 @@ class LoginController implements BlocBase {
       final FirebaseUser currentUser = await _auth.currentUser();
       print('AQUI USUARIO ${user.toString()}');
       assert(user.uid == currentUser.uid);
+      User data = new User.Empty();
+      data.created_at = DateTime.now();
+      data.nome = user.displayName;
+      data.email = user.email;
+      data.foto = user.photoUrl;
+      data.data_nascimento = null;
+      data.id = user.uid;
+      data.updated_at = DateTime.now();
+      data.isEmailVerified = user.isEmailVerified;
+      data.tipo = 'Google';
+
+      databaseReference
+          .document(user.uid)
+          .setData({'User': data.toJson()}).catchError((err) {
+        print('Erro salvado Usuario: ${err.toString()}');
+      });
       Helper().setUserType('Google');
+      return 0;
     }).catchError((err) {
       print('Erro no Login com Google ${err.toString()}');
     });
@@ -60,9 +83,41 @@ class LoginController implements BlocBase {
   Future LoginInstagram() async {
     Token t = await getToken();
     Helper().setUserType('Instagram');
-    final FirebaseUser user = await _auth.createUserWithEmailAndPassword(
-        email: t.id + '@instagram.com', password: '123456');
-    print('AQUI USUARIO ${user.toString()}');
+    return _auth
+        .signInWithEmailAndPassword(
+            email: t.id + '@instagram.com', password: '123456')
+        .then((user) async {
+      if (user != null) {
+        print('Logou');
+        return 0;
+      } else {
+        final FirebaseUser user = await _auth.createUserWithEmailAndPassword(
+            email: t.id + '@instagram.com', password: '123456');
+            UserUpdateInfo upi = new UserUpdateInfo();
+            upi.photoUrl = t.profile_picture;
+            upi.displayName = t.username;
+            user.updateProfile(upi);
+        User data = new User.Empty();
+        data.created_at = DateTime.now();
+        data.nome = user.displayName;
+        data.email = t.id + '@instagram.com';
+        data.foto = user.photoUrl;
+        data.data_nascimento = null;
+        data.id = user.uid;
+        data.updated_at = DateTime.now();
+        data.isEmailVerified = user.isEmailVerified;
+        data.tipo = 'Instagram';
+
+        databaseReference
+            .document(user.uid)
+            .setData({'User': data.toJson()}).catchError((err) {
+          print('Erro salvado Usuario: ${err.toString()}');
+        });
+        return 0;
+
+        print('AQUI USUARIO ${user.toString()}');
+      }
+    }).catchError(onError);
   }
 
   getUserfacebookProfile(result) async {
@@ -71,14 +126,34 @@ class LoginController implements BlocBase {
         'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
     print(
         'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
-    final profile = json.decode(graphResponse.body);
-    print('AQUI PROFILE ${profile.toString()}');
+    final user = json.decode(graphResponse.body);
+    print(user);
+
+    User data = new User.Empty();
+    data.created_at = DateTime.now();
+    data.nome = user['name'];
+    data.email = user['email'];
+    data.foto =
+        'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}';
+    data.data_nascimento = null;
+    data.id = user['id'];
+    data.updated_at = DateTime.now();
+    data.isEmailVerified = true;
+    data.tipo = 'Facebook';
+
+    databaseReference
+        .document(user['id'])
+        .setData({'User': data.toJson()}).catchError((err) {
+      print('Erro salvado Usuario: ${err.toString()}');
+    });
+    print('AQUI PROFILE ${user.toString()}');
+        return 0;
   }
 
   Future LoginTwitter() async {
     var twitterLogin = new TwitterLogin(
-      consumerKey: 'WpV2exYj194Dbssg9e9l8mgx0 ',
-      consumerSecret: 'fxV0JbuDzA3L6gCrtweOEv27O4bxMzGNIurYnNYK87y0JlzRnz ',
+      consumerKey: 'PFaXsKzjtBFewWjbFvPlUmW6R   ',
+      consumerSecret: 'Vsgqiautu8KWjApPrpkOMtZDcF6mhr9JCg8cyPAw6SOVgnrRII ',
     );
 
     final TwitterLoginResult result = await twitterLogin.authorize();
@@ -93,10 +168,25 @@ class LoginController implements BlocBase {
 
         print('AQUI USUARIO ${user.toString()}');
         final FirebaseUser currentUser = await _auth.currentUser();
-        assert(user.uid == currentUser.uid);
         Helper().setUserType('Twitter');
         if (user != null) {
-          return 'Successfully signed in with Twitter. ' + user.uid;
+          User data = new User.Empty();
+          data.created_at = DateTime.now();
+          data.nome = user.displayName;
+          data.email = user.email;
+          data.foto = user.photoUrl;
+          data.data_nascimento = null;
+          data.id = user.uid;
+          data.updated_at = DateTime.now();
+          data.isEmailVerified = user.isEmailVerified;
+          data.tipo = 'Twitter';
+
+          databaseReference
+              .document(user.uid)
+              .setData({'User': data.toJson()}).catchError((err) {
+            print('Erro salvado Usuario: ${err.toString()}');
+          });
+              return 0;
         } else {
           return 'Failed to sign in with Twitter. ';
         }
@@ -125,7 +215,7 @@ class LoginController implements BlocBase {
         final FirebaseUser user = await _auth.signInWithCredential(credential);
         print('AQUI USUARIO ${user.toString()}');
         Helper().setUserType('Facebook');
-        return 'Logged in! Token: ${accessToken.token} User id: ${accessToken.userId} Expires: ${accessToken.expires} Permissions: ${accessToken.permissions} Declined permissions: ${accessToken.declinedPermissions}';
+            return 0;
         break;
       case FacebookLoginStatus.cancelledByUser:
         return 'Login cancelled by the user.';

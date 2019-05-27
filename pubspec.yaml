@@ -82,7 +82,7 @@ dependencies:
   sqflite: 1.1.5
   cupertino_icons: ^0.1.2
 
-  google_maps_flutter: 0.5.11+1
+  google_maps_flutter: 0.5.13
   bloc_pattern: 2.1.0
   rxdart: 0.21.0
   redux: 3.0.0
