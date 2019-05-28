@@ -1,34 +1,58 @@
 {
   "project_info": {
-    "project_number": "149903286255",
-    "firebase_url": "https://kivaga-a4321.firebaseio.com",
-    "project_id": "kivaga-a4321",
-    "storage_bucket": "kivaga-a4321.appspot.com"
+    "project_number": "449393682940",
+    "firebase_url": "https://kivaga-cda25.firebaseio.com",
+    "project_id": "kivaga-cda25",
+    "storage_bucket": "kivaga-cda25.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:149903286255:android:f88d02a286624afc",
+        "mobilesdk_app_id": "1:449393682940:android:ae76785338837ccc",
         "android_client_info": {
           "package_name": "com.rbsoftware.kivaga"
         }
       },
       "oauth_client": [
         {
-          "client_id": "149903286255-iauh6a8mf46rs0j8k3aunrr37l1ke61m.apps.googleusercontent.com",
+          "client_id": "449393682940-f4k1nma0gh018n377v5073gqrtquhrod.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rbsoftware.kivaga",
+            "certificate_hash": "aaed8fb3edf27ae1892576ba722622d4d2c5fafb"
+          }
+        },
+        {
+          "client_id": "449393682940-uev6c20kn65f6ihenk00nh6bgu41k3uj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rbsoftware.kivaga",
+            "certificate_hash": "7c1366c70b332ec21184e82fbe8b94390f7b09db"
+          }
+        },
+        {
+          "client_id": "449393682940-fi6r0qnljid18l7pt4q5t0pguba7gmhv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rbsoftware.kivaga",
+            "certificate_hash": "a35979ee32e766b06bfb750d8b24326bcdcea791"
+          }
+        },
+        {
+          "client_id": "449393682940-aql76lkhgls996287du1dtu6065ojhph.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBr2c9gzFw3ElQ5HTIOq4Z5IzQhkn_fRpY"
+          "current_key": "AIzaSyCL4VIm1Rvun8VA8a82IZ8JQLYVedJEuOo"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "149903286255-iauh6a8mf46rs0j8k3aunrr37l1ke61m.apps.googleusercontent.com",
+              "client_id": "449393682940-aql76lkhgls996287du1dtu6065ojhph.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
