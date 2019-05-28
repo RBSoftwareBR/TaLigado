@@ -46,6 +46,7 @@ class _HomePageState extends State<HomePage>
   bool openNews = true;
   Color c = Colors.black87;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
+  var page0,page1,page2,page3;
 
   KivagaLogo(context, m1, m2) {
     return SizedBox(
