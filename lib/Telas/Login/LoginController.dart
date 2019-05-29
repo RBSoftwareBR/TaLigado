@@ -74,6 +74,8 @@ class LoginController implements BlocBase {
         print('Erro salvado Usuario: ${err.toString()}');
       });
       Helper().setUserType('Google');
+      Helper.localUser = data;
+      Helper.user = user;
       return 0;
     }).catchError((err) {
       print('Erro no Login com Google ${err.toString()}');
@@ -88,15 +90,31 @@ class LoginController implements BlocBase {
             email: t.id + '@instagram.com', password: '123456')
         .then((user) async {
       if (user != null) {
+        User data = new User.Empty();
+        data.created_at = DateTime.now();
+        data.nome = user.displayName;
+        data.email = t.id + '@instagram.com';
+        data.foto = user.photoUrl;
+        data.data_nascimento = null;
+        data.id = user.uid;
+        data.updated_at = DateTime.now();
+        data.isEmailVerified = user.isEmailVerified;
+        data.tipo = 'Instagram';
         print('Logou');
+        Helper.localUser = data;
+        Helper.user = user;
         return 0;
       } else {
         final FirebaseUser user = await _auth.createUserWithEmailAndPassword(
             email: t.id + '@instagram.com', password: '123456');
-            UserUpdateInfo upi = new UserUpdateInfo();
-            upi.photoUrl = t.profile_picture;
-            upi.displayName = t.username;
-            user.updateProfile(upi);
+        UserUpdateInfo upi = new UserUpdateInfo();
+        upi.photoUrl = t.profile_picture;
+        upi.displayName = t.username;
+         user.updateProfile(upi).then((t){
+        print('UPDATE USUARIO DEMONIO');
+      }).catchError((err){
+        print('ERRO AQUI FDP ${err.toString()}');
+      });
         User data = new User.Empty();
         data.created_at = DateTime.now();
         data.nome = user.displayName;
@@ -110,14 +128,53 @@ class LoginController implements BlocBase {
 
         databaseReference
             .document(user.uid)
-            .setData({'User': data.toJson()}).catchError((err) {
+            .setData({'User': data.toJson()}).then((v){
+              print('Salvou a porra do Usuario');
+            }).catchError((err) {
           print('Erro salvado Usuario: ${err.toString()}');
         });
+        Helper.localUser = data;
+        Helper.user = user;
         return 0;
 
         print('AQUI USUARIO ${user.toString()}');
       }
-    }).catchError(onError);
+    }).catchError((err) async {
+      onError(err);
+      final FirebaseUser user = await _auth.createUserWithEmailAndPassword(
+          email: t.id + '@instagram.com', password: '123456');
+      UserUpdateInfo upi = new UserUpdateInfo();
+      upi.photoUrl = t.profile_picture;
+      upi.displayName = t.username;
+      user.updateProfile(upi).then((t){
+        print('UPDATE USUARIO DEMONIO');
+      }).catchError((err){
+        print('ERRO AQUI FDP ${err.toString()}');
+      });;
+      User data = new User.Empty();
+      data.created_at = DateTime.now();
+      data.nome = user.displayName;
+      data.email = t.id + '@instagram.com';
+      data.foto = user.photoUrl;
+      data.data_nascimento = null;
+      data.id = user.uid;
+      data.updated_at = DateTime.now();
+      data.isEmailVerified = user.isEmailVerified;
+      data.tipo = 'Instagram';
+
+      databaseReference
+          .document(user.uid)
+          .setData({'User': data.toJson()}).then((v){
+              print('Salvou a porra do Usuario');
+            }).catchError((err) {
+        print('Erro salvado Usuario: ${err.toString()}');
+      });
+      Helper.localUser = data;
+      Helper.user = user;
+      return 0;
+
+      print('AQUI USUARIO ${user.toString()}');
+    });
   }
 
   getUserfacebookProfile(result) async {
@@ -146,8 +203,11 @@ class LoginController implements BlocBase {
         .setData({'User': data.toJson()}).catchError((err) {
       print('Erro salvado Usuario: ${err.toString()}');
     });
+
+    Helper.localUser = data;
     print('AQUI PROFILE ${user.toString()}');
-        return 0;
+
+    return 0;
   }
 
   Future LoginTwitter() async {
@@ -186,7 +246,9 @@ class LoginController implements BlocBase {
               .setData({'User': data.toJson()}).catchError((err) {
             print('Erro salvado Usuario: ${err.toString()}');
           });
-              return 0;
+          Helper.localUser = data;
+          Helper.user = currentUser;
+          return 0;
         } else {
           return 'Failed to sign in with Twitter. ';
         }
@@ -213,9 +275,12 @@ class LoginController implements BlocBase {
           accessToken: accessToken.token,
         );
         final FirebaseUser user = await _auth.signInWithCredential(credential);
+
+        Helper.user = user;
         print('AQUI USUARIO ${user.toString()}');
+
         Helper().setUserType('Facebook');
-            return 0;
+        return 0;
         break;
       case FacebookLoginStatus.cancelledByUser:
         return 'Login cancelled by the user.';

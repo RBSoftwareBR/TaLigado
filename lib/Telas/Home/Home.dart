@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   bool isCollapsed = true;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   double screenWidth, screenHeight;
   final Duration duration = const Duration(milliseconds: 300);
   AnimationController _controller;
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage>
       print(user);
       if (user != null) {
         Helper.user = user;
-        print(Helper.user);
+        print('AQUI USER ${Helper.user}');
       }
     });
     pageController = new PageController(initialPage: this.page, keepPage: true);
@@ -184,12 +185,14 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget menu(context) {
+    print('AQUI CHEGANDO ${Helper.localUser}');
     return SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
         scale: _menuScaleAnimation,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8, 64, 0, 0),
+          padding: EdgeInsets.fromLTRB(
+              MediaQuery.of(context).size.height * .01, 64, 0, 0),
           child: Align(
             alignment: Alignment.topLeft,
             child: Column(
@@ -203,7 +206,9 @@ class _HomePageState extends State<HomePage>
                       radius: 30,
                       backgroundImage: CachedNetworkImageProvider(Helper.user !=
                               null
-                          ? Helper.user.photoUrl
+                          ? Helper.localUser != null
+                              ? Helper.localUser.foto
+                              : 'https://www.fkbga.com/wp-content/uploads/2018/07/person-icon-6.png'
                           : 'https://www.fkbga.com/wp-content/uploads/2018/07/person-icon-6.png'),
                     ),
                     SizedBox(
@@ -214,7 +219,9 @@ class _HomePageState extends State<HomePage>
                       children: <Widget>[
                         Text(
                           Helper.user != null
-                              ? Helper.user.displayName
+                              ? Helper.localUser != null
+                                  ? Helper.localUser.nome
+                                  : 'Carregando Usuario'
                               : 'Carregando Usuario',
                           style: TextStyle(
                               fontSize: 24, fontStyle: FontStyle.normal),
@@ -223,7 +230,10 @@ class _HomePageState extends State<HomePage>
                           height: 5,
                         ),
                         Text(
-                          '@' + Helper.user.displayName.replaceAll(' ', '.'),
+                           Helper.localUser != null
+                              ? Helper.localUser.nome != null
+                                  ?
+                          '@' + Helper.localUser.nome.replaceAll(' ', '.'):'':'',
                           style: TextStyle(
                               color: Colors.orange,
                               fontStyle: FontStyle.italic),
@@ -244,13 +254,19 @@ class _HomePageState extends State<HomePage>
                 MenuButton(
                     context, 'Configurações', Icons.settings, false, () {}),
                 MenuButton(context, 'Ajuda', Icons.help, false, () {}),
-                MenuButton(context, 'Logout', Icons.exit_to_app, true, () {}),
+                MenuButton(context, 'Logout', Icons.exit_to_app, true,
+            (){doLogout(context);}),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  doLogout(context) async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   Widget MenuButton(context, text, icon, isLogout, onPress) {
@@ -309,7 +325,11 @@ class _HomePageState extends State<HomePage>
     return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height * .8,
-        padding: const EdgeInsets.only(left: 0, right: 0, top: 20),
+        padding: EdgeInsets.only(
+          left: 0,
+          right: 0,
+          top: MediaQuery.of(context).size.height * .01,
+        ),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -317,7 +337,11 @@ class _HomePageState extends State<HomePage>
                 color: Colors.blue,
                 height: MediaQuery.of(context).size.height * .1,
                 width: MediaQuery.of(context).size.width,
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 20),
+                padding: EdgeInsets.only(
+                  left: 16,
+                  right: 16,
+                  top: MediaQuery.of(context).size.height * .01,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   mainAxisSize: MainAxisSize.max,

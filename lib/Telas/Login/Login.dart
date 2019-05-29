@@ -83,6 +83,7 @@ class Login extends StatelessWidget {
                 CustomButton(
                   onPressed: () {
                     lc.LoginInstagram().then((r) {
+                      print('Retornou Login Instagram $r');
                       if (r == 0) {
                                  pushHome(context);
                       }else{

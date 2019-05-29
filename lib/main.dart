@@ -52,10 +52,14 @@ class MyApp extends StatelessWidget {
         FirebaseAnalyticsObserver(analytics: analytics),
       ],
       home: FutureBuilder(future: _auth.currentUser(),builder: (context,future){
-        print(future);
-  
+        print('AQUI FUTURE ${future.data}');
+        if(future.hasData){
+          print('Return Home');
+          return HomePage();
+        }else{
+           print('Return Login');
             return Login();
-         
+        }
       },) 
     );
   }
