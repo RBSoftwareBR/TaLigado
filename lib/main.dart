@@ -10,6 +10,7 @@ import 'package:kivaga/Telas/Login/LoginEmail/EsqueceuSenha/EsqueceuSenha.dart';
 import 'package:kivaga/Telas/Login/LoginEmail/LoginEmail.dart';
 import 'package:kivaga/Telas/Login/LoginTelefone/CadastroTelefone/CadastroTelefone.dart';
 import 'package:kivaga/Telas/Login/LoginTelefone/LoginTelefone.dart';
+import 'package:kivaga/Telas/Payment/PagamentoPage.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/cadastroemail': (BuildContext context) => CadastroEmail(),
         '/cadastrotelefone': (BuildContext context) => CadastroTelefone(),
         '/esqueceusenha': (BuildContext context) => EsqueceuSenha(),
+        '/pagamento': (BuildContext context) => PagamentoPage(),
       },
       theme: ThemeData(
         // This is the theme of your application.

@@ -250,7 +250,9 @@ class _HomePageState extends State<HomePage>
                 MenuButton(
                     context, 'Editar Perfil', Icons.person, false, () {}),
                 MenuButton(context, 'Adicionar Creditos', Icons.credit_card,
-                    false, () {}),
+                    false, () {
+                      Navigator.of(context).pushReplacementNamed('/pagamento');
+                    }),
                 MenuButton(
                     context, 'Configurações', Icons.settings, false, () {}),
                 MenuButton(context, 'Ajuda', Icons.help, false, () {}),
