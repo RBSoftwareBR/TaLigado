@@ -72,7 +72,7 @@ class _PagamentoPageState extends State<PagamentoPage> {
 
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * .75,
+                height: MediaQuery.of(context).size.height * .65,
                 child: ListView.separated(
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
