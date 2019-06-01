@@ -10,17 +10,16 @@ BehaviorSubject<int> inteiroController = new BehaviorSubject<int>();
 Stream<int> get outInt => inteiroController.stream;
 
 Sink <int> get inInt => inteiroController.sink;
-
+int val = 1;
 //CONSTRUTOR
 PagamentoController(){
-  int val = 1;
 
-  inInt.add(val);
+  inInt.add(this.val);
 }
 
-addContador(){
-
-  inInt.add(1);
+void addContador(){
+  this.val = this.val + 1;
+  inInt.add(this.val);
 }
   @override
   void dispose() {
