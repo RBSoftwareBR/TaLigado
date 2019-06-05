@@ -42,7 +42,9 @@ class _CadastrarRuaPageState extends State<CadastrarRuaPage> {
                         widget.cidade.localizacao.longitude),
                     zoom: 17.0,
                   ),
-                  polylines: Set<Polyline>.of(snap.data.values),
+                  polylines: snap.hasData
+                      ? Set<Polyline>.of(snap.data.values)
+                      : Set<Polyline>(),
                   onMapCreated: _onMapCreated,
                 );
                 },) 

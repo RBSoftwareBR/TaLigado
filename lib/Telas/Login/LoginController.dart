@@ -110,11 +110,11 @@ class LoginController implements BlocBase {
         UserUpdateInfo upi = new UserUpdateInfo();
         upi.photoUrl = t.profile_picture;
         upi.displayName = t.username;
-         user.updateProfile(upi).then((t){
-        print('UPDATE USUARIO DEMONIO');
-      }).catchError((err){
-        print('ERRO AQUI FDP ${err.toString()}');
-      });
+        user.updateProfile(upi).then((t) {
+          print('UPDATE USUARIO DEMONIO');
+        }).catchError((err) {
+          print('ERRO AQUI FDP ${err.toString()}');
+        });
         User data = new User.Empty();
         data.created_at = DateTime.now();
         data.nome = user.displayName;
@@ -128,9 +128,9 @@ class LoginController implements BlocBase {
 
         databaseReference
             .document(user.uid)
-            .setData({'User': data.toJson()}).then((v){
-              print('Salvou a porra do Usuario');
-            }).catchError((err) {
+            .setData({'User': data.toJson()}).then((v) {
+          print('Salvou a porra do Usuario');
+        }).catchError((err) {
           print('Erro salvado Usuario: ${err.toString()}');
         });
         Helper.localUser = data;
@@ -146,11 +146,12 @@ class LoginController implements BlocBase {
       UserUpdateInfo upi = new UserUpdateInfo();
       upi.photoUrl = t.profile_picture;
       upi.displayName = t.username;
-      user.updateProfile(upi).then((t){
+      user.updateProfile(upi).then((t) {
         print('UPDATE USUARIO DEMONIO');
-      }).catchError((err){
+      }).catchError((err) {
         print('ERRO AQUI FDP ${err.toString()}');
-      });;
+      });
+      ;
       User data = new User.Empty();
       data.created_at = DateTime.now();
       data.nome = user.displayName;
@@ -164,9 +165,9 @@ class LoginController implements BlocBase {
 
       databaseReference
           .document(user.uid)
-          .setData({'User': data.toJson()}).then((v){
-              print('Salvou a porra do Usuario');
-            }).catchError((err) {
+          .setData({'User': data.toJson()}).then((v) {
+        print('Salvou a porra do Usuario');
+      }).catchError((err) {
         print('Erro salvado Usuario: ${err.toString()}');
       });
       Helper.localUser = data;

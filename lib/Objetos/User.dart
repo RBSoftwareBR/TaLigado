@@ -102,24 +102,25 @@ class User {
       this.tipo,
       this.foto});
 
-  User.fromJson(Map<String, dynamic> j) {
-    print(j.toString());
-    this.id = j['id'];
-    this.nome = j['nome'];
+  User.fromJson(j) {
+    print('CHEGOU AQUI ');
+    this.id = j['id'] == null ? null : j['id'];
+    this.nome = j['nome'] == null ? null : j['nome'];
     this.data_nascimento = j['data_nascimento'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(j['data_nascimento']);
-    this.celular = j['celular'];
-    this.cpf = j['cpf'];
-    this.email = j['email'];
-    this.senha = j['senha'];
-    this.strike = int.parse(j['strike']);
-    this.identidade = j['identidade'];
-    this.identidade_expedidor = j['identidade_expedidor'];
+    this.celular = j['celular'] == null ? null : j['celular'];
+    this.cpf = j['cpf'] == null ? null : j['cpf'];
+    this.email = j['email'] == null ? null : j['email'];
+    this.senha = j['senha'] == null ? null : j['senha'];
+    this.strike = j['strike'] == null ? null : j['strike'];
+    this.identidade = j['identidade'] == null ? null : j['identidade'];
+    this.identidade_expedidor =
+        j['identidade_expedidor'] == null ? null : j['identidade_expedidor'];
     this.identidade_data_expedicao = j['identidade_data_expedicao'] == null
         ? null
         : DateTime.parse(j['identidade_data_expedicao']);
-    this.permissao = j['permissao'];
+    this.permissao = j['permissao'] == null ? null : j['permissao'];
     this.created_at = j['created_at'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(j['created_at']);
@@ -129,14 +130,15 @@ class User {
     this.deleted_at = j['deleted_at'] == null
         ? null
         : DateTime.fromMillisecondsSinceEpoch(j['deleted_at']);
-    this.remember_token = j['remember_token'];
+    this.remember_token =
+        j['remember_token'] == null ? null : j['remember_token'];
     this.cartoes = (j['cartoes'] as List) != null
         ? (j['cartoes'] as List).map((i) => Cartao.fromJson(i)).toList()
         : null;
     this.isEmailVerified =
         j['isEmailVerified'] == null ? null : j['isEmailVerified'];
-    this.tipo = j['tipo'];
-    this.foto = j['foto'];
+    this.tipo = j['tipo'] == null ? null : j['tipo'];
+    this.foto = j['foto'] == null ? null : j['foto'];
   }
 
   Map<String, dynamic> toJson() {

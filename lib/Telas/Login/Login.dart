@@ -70,12 +70,12 @@ class Login extends StatelessWidget {
                 ),
                 GoogleSignInButton(
                   onPressed: () {
-                    lc.LoginGoogle().then((r){
-                      if(r == 0){
-                               pushHome(context);
-                      }else{
+                    lc.LoginGoogle().then((r) {
+                      if (r == 0) {
+                        pushHome(context);
+                      } else {
                         print(r.toString());
-                        }
+                      }
                     }).catchError((onError));
                   },
                   text: 'Login pelo Google',
@@ -85,10 +85,10 @@ class Login extends StatelessWidget {
                     lc.LoginInstagram().then((r) {
                       print('Retornou Login Instagram $r');
                       if (r == 0) {
-                                 pushHome(context);
-                      }else{
+                        pushHome(context);
+                      } else {
                         print(r.toString());
-                        }
+                      }
                     }).catchError((onError));
                   },
                   color: Colors.purple,
@@ -100,10 +100,10 @@ class Login extends StatelessWidget {
                   onPressed: () {
                     lc.LoginFacebook().then((r) {
                       if (r == 0) {
-                           pushHome(context);
-                      }else{
+                        pushHome(context);
+                      } else {
                         print(r.toString());
-                        }
+                      }
                     }).catchError((onError));
                   },
                   text: 'Login pelo Facebook',
@@ -113,9 +113,9 @@ class Login extends StatelessWidget {
                     lc.LoginTwitter().then((r) {
                       if (r == 0) {
                         pushHome(context);
-                      }else{
+                      } else {
                         print(r.toString());
-                        }
+                      }
                     }).catchError((onError));
                   },
                   text: 'Login pelo Twitter',
@@ -132,7 +132,7 @@ class Login extends StatelessWidget {
     print('Error: ${err.toString()}');
   }
 
-  pushHome(context){
+  pushHome(context) {
     Navigator.of(context).pushReplacementNamed('/home');
   }
 }

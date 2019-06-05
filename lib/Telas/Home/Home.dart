@@ -1,16 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kivaga/Helpers/Helper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:kivaga/Objetos/Cidade.dart';
 import 'package:kivaga/Objetos/User.dart';
+import 'package:kivaga/Telas/Carro/CarrosList.dart';
+import 'package:kivaga/Telas/Carro/CarrosListController.dart';
 import 'package:kivaga/Telas/Home/PaginaPrincipalController.dart';
 import 'package:kivaga/Telas/Map/CadastrarRuaPage.dart';
 import 'package:kivaga/Telas/Map/EstacionarPage.dart';
-import 'package:latlong/latlong.dart';
+import 'package:kivaga/Telas/Payment/PagamentoController.dart';
+import 'package:kivaga/Telas/Payment/PagamentoPage.dart';
 import 'package:shimmer/shimmer.dart';
 
 final Color backgroundColor = Colors.white;
@@ -31,6 +33,8 @@ class _HomePageState extends State<HomePage>
   Animation<double> _scaleAnimation;
   Animation<double> _menuScaleAnimation;
   Animation<Offset> _slideAnimation;
+  PagamentoController pagamentoController;
+  CarrosListController clc;
 
   final PagesController pc = new PagesController(0);
   bool openedDL = false;
@@ -78,6 +82,8 @@ class _HomePageState extends State<HomePage>
         print('AQUI USER ${Helper.user}');
       }
     });
+    pagamentoController = new PagamentoController();
+    clc = new CarrosListController();
     pageController = new PageController(initialPage: this.page, keepPage: true);
     _controller = AnimationController(vsync: this, duration: duration);
     _scaleAnimation = Tween<double>(begin: 1, end: 0.8).animate(_controller);
@@ -204,7 +210,8 @@ class _HomePageState extends State<HomePage>
                   children: <Widget>[
                     CircleAvatar(
                       radius: 30,
-                      backgroundImage: CachedNetworkImageProvider(Helper.user !=
+                      backgroundImage: CachedNetworkImageProvider(Helper
+                                  .localUser !=
                               null
                           ? Helper.localUser != null
                               ? Helper.localUser.foto
@@ -230,10 +237,12 @@ class _HomePageState extends State<HomePage>
                           height: 5,
                         ),
                         Text(
-                           Helper.localUser != null
+                          Helper.localUser != null
                               ? Helper.localUser.nome != null
-                                  ?
-                          '@' + Helper.localUser.nome.replaceAll(' ', '.'):'':'',
+                                  ? '@' +
+                                      Helper.localUser.nome.replaceAll(' ', '.')
+                                  : ''
+                              : '',
                           style: TextStyle(
                               color: Colors.orange,
                               fontStyle: FontStyle.italic),
@@ -249,15 +258,16 @@ class _HomePageState extends State<HomePage>
                 ),
                 MenuButton(
                     context, 'Editar Perfil', Icons.person, false, () {}),
-                MenuButton(context, 'Adicionar Creditos', Icons.credit_card,
+                /* MenuButton(context, 'Adicionar Creditos', Icons.credit_card,
                     false, () {
-                      Navigator.of(context).pushReplacementNamed('/pagamento');
-                    }),
+
+                    }),*/
                 MenuButton(
                     context, 'Configurações', Icons.settings, false, () {}),
                 MenuButton(context, 'Ajuda', Icons.help, false, () {}),
-                MenuButton(context, 'Logout', Icons.exit_to_app, true,
-            (){doLogout(context);}),
+                MenuButton(context, 'Logout', Icons.exit_to_app, true, () {
+                  doLogout(context);
+                }),
               ],
             ),
           ),
@@ -371,58 +381,39 @@ class _HomePageState extends State<HomePage>
   }
 
   PageContent(context, snapshot) {
+    page2 = WidgetTopMenu(
+        context, Column(children: <Widget>[CarroListPage(clc: clc)]));
+
+    page3 = WidgetTopMenu(context,
+        Column(children: <Widget>[CadastrarRuaPage(cidade: Helper.OuroPreto)]));
+    page1 = WidgetTopMenu(context,
+        Column(children: <Widget>[PagamentoPage(pc: pagamentoController)]));
     page0 = WidgetTopMenu(
         context,
-        Column(
-          children: <Widget>[
-            Text(
-              "Transactions",
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * .75,
-                child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text("Macbook"),
-                        subtitle: Text("Apple"),
-                        trailing: Text("-2900"),
-                      );
-                    },
-                    separatorBuilder: (context, index) {
-                      return Divider(height: 16);
-                    },
-                    itemCount: 10))
-          ],
-        ));
-
-    page1 = WidgetTopMenu(context,
-        Column(children: <Widget>[CadastrarRuaPage(cidade: Helper.OuroPreto)]));
-    page2 = WidgetTopMenu(context,
-        Column(children: <Widget>[EstacionarPage(cidade: Helper.OuroPreto)]));
+        Column(children: <Widget>[
+          EstacionarPage(cidade: Helper.OuroPreto, pc: pagamentoController)
+        ]));
     return Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         child: Scaffold(
           bottomNavigationBar: BottomAppBar(
               shape: CircularNotchedRectangle(),
-              color: Colors.grey[200],
+              color: Colors.blue,
               child: new Row(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     snapshot.data == 0
                         ? Shimmer.fromColors(
-                            baseColor: Colors.blue,
-                            highlightColor: Colors.white,
+                            baseColor: Colors.white,
+                            highlightColor: Colors.blueAccent,
                             direction: ShimmerDirection.ttb,
                             period: Duration(seconds: 6),
                             child: IconButton(
                               tooltip: 'Principal',
-                              icon: new Icon(Icons.home),
-                              color: Colors.blue,
+                              icon: new Icon(Icons.local_parking),
+                              color: Colors.white,
                               iconSize: 35,
                               onPressed: () => onTap(1),
                             ))
@@ -431,10 +422,10 @@ class _HomePageState extends State<HomePage>
                             icon: Stack(
                               alignment: Alignment.center,
                               children: <Widget>[
-                                Icon(Icons.home),
+                                Icon(Icons.local_parking),
                               ],
                             ),
-                            color: Colors.grey[600],
+                            color: Colors.white,
                             iconSize: 35,
                             onPressed: () {
                               onTap(0);
@@ -442,55 +433,55 @@ class _HomePageState extends State<HomePage>
                           ),
                     snapshot.data == 1
                         ? Shimmer.fromColors(
-                            baseColor: Colors.blue,
-                            highlightColor: Colors.white,
+                            baseColor: Colors.white,
+                            highlightColor: Colors.blueAccent,
                             direction: ShimmerDirection.ttb,
                             period: Duration(seconds: 6),
                             child: IconButton(
                               tooltip: 'Procurar',
-                              icon: new Icon(Icons.search),
-                              color: Colors.blue,
+                              icon: new Icon(Icons.account_balance_wallet),
+                              color: Colors.white,
                               iconSize: 35,
                               onPressed: () => onTap(1),
                             ))
                         : IconButton(
                             tooltip: 'Procurar',
-                            icon: new Icon(Icons.search),
-                            color: Colors.grey[600],
+                            icon: new Icon(Icons.account_balance_wallet),
+                            color: Colors.white,
                             iconSize: 35,
                             onPressed: () => onTap(1),
                           ),
                     snapshot.data == 2
                         ? Shimmer.fromColors(
-                            baseColor: Colors.blue,
-                            highlightColor: Colors.white,
+                            baseColor: Colors.white,
+                            highlightColor: Colors.blueAccent,
                             direction: ShimmerDirection.ttb,
                             period: Duration(seconds: 6),
                             child: IconButton(
                               tooltip: 'Mapa da Cidade',
-                              icon: new Icon(Icons.shopping_cart),
-                              color: Colors.grey[600],
+                              icon: new Icon(Icons.time_to_leave),
+                              color: Colors.white,
                               iconSize: 35,
                               onPressed: () => onTap(2),
                             ),
                           )
                         : IconButton(
                             tooltip: 'Mapa da Cidade',
-                            icon: new Icon(Icons.shopping_cart),
-                            color: Colors.grey[600],
+                            icon: new Icon(Icons.time_to_leave),
+                            color: Colors.white,
                             iconSize: 35,
                             onPressed: () => onTap(2),
                           ),
                     snapshot.data == 3
                         ? Shimmer.fromColors(
-                            baseColor: Colors.blue,
-                            highlightColor: Colors.white,
+                            baseColor: Colors.white,
+                            highlightColor: Colors.blueAccent,
                             direction: ShimmerDirection.ttb,
                             period: Duration(seconds: 6),
                             child: IconButton(
                               tooltip: 'Perfil',
                               icon: new Icon(Icons.person),
-                              color: Colors.blue,
+                              color: Colors.white,
                               iconSize: 35,
                               onPressed: () => onTap(3),
                             ),
@@ -498,11 +489,11 @@ class _HomePageState extends State<HomePage>
                         : IconButton(
                             tooltip: 'Perfil',
                             icon: new Icon(Icons.person),
-                            color: Colors.grey[600],
+                            color: Colors.white,
                             iconSize: 35,
                             onPressed: () => onTap(3),
                           ),
-                    snapshot.data == 4
+                    /*snapshot.data == 4
                         ? Shimmer.fromColors(
                             baseColor: Colors.blue,
                             highlightColor: Colors.white,
@@ -521,7 +512,7 @@ class _HomePageState extends State<HomePage>
                             color: Colors.grey[600],
                             iconSize: 35,
                             onPressed: () => onTap(4),
-                          ),
+                          ),*/
 
                     /*new BottomNavigationBarItem(
                               icon: new Icon(Icons.location_on),
@@ -531,7 +522,7 @@ class _HomePageState extends State<HomePage>
                               title: new Text("Perfil"))*/
                   ])),
           body: PageView(
-              physics: snapshot.data == 1
+              physics: snapshot.data == 0
                   ? NeverScrollableScrollPhysics()
                   : BouncingScrollPhysics(),
               children: [page0, page1, page2, page3, page4],
