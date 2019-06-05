@@ -25,11 +25,11 @@ class MyApp extends StatelessWidget {
       FirebaseAnalyticsObserver(analytics: analytics);
   final userRef = Firestore.instance.collection('Users').reference();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.blue));
-
     return MaterialApp(
         title: 'kivaga',
         debugShowCheckedModeBanner: false,
@@ -61,23 +61,18 @@ class MyApp extends StatelessWidget {
         home: FutureBuilder(
           future: _auth.currentUser(),
           builder: (context, AsyncSnapshot<FirebaseUser> future) {
-            print('AQUI FUTURE ${future.data}');
             if (future.hasData) {
               return FutureBuilder(
                   future: userRef.document(future.data.uid).get(),
                   builder: (context, v) {
-                    if(v.hasData) {
-                      print('LALALALALA');
-                      print('DATA' + v.data['User'].toString());
+                    if (v.hasData) {
                       Helper.localUser = User.fromJson(v.data['User']);
-                      print('Return Home');
                       return HomePage();
-                    }else{
+                    } else {
                       return Login();
                     }
                   });
             } else {
-              print('Return Login');
               return Login();
             }
           },

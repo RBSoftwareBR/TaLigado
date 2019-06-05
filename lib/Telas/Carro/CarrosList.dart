@@ -1,123 +1,140 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:kivaga/Objetos/Transacao.dart';
+import 'package:kivaga/Objetos/Carro.dart';
 import 'package:kivaga/Telas/Carro/CarrosListController.dart';
+import 'package:kivaga/Telas/Dialogs/Dialogs.dart';
+import 'package:kivaga/Telas/Home/PaginaPrincipalController.dart';
 
-class CarroListPage extends StatefulWidget {
+// ignore: must_be_immutable
+class CarrosListPage extends StatefulWidget {
   CarrosListController clc;
-  CarroListPage({this.clc});
+  PagesController paginaController;
+  CarrosListPage({this.clc, this.paginaController});
 
-  _CarroListPageState createState() => _CarroListPageState();
+  _CarrosListPageState createState() => _CarrosListPageState();
 }
 
-class _CarroListPageState extends State<CarroListPage> {
+class _CarrosListPageState extends State<CarrosListPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * .789,
-        child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.white,
-              child: Stack(
-                children: <Widget>[
-                  Icon(
-                    Icons.time_to_leave,
-                    color: Colors.blue,
-                  ),
-                  Positioned(
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.green,
-                      size: 20,
-                    ),
-                    top: -5,
-                    right: -5,
-                  )
-                ],
-              ),
-              onPressed: () {},
-            ),
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Container(
-                child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    //crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.all(25.0),
-                        child: SizedBox(
-                            //CARREGAMENTO DO PAGAMENTO CONTROLLER
-                            child: Center(
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                "Meus créditos",
-                                style: TextStyle(fontSize: 20),
-                              ),
-                              /*Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: StreamBuilder(
-                                      stream: widget.pc.outSaldo,
-                                      initialData: 0,
-                                      builder: (BuildContext context,
-                                          AsyncSnapshot snapshot) {
-                                        return Text(
-                                          snapshot.data.toString(),
-                                          style: TextStyle(fontSize: 20),
-                                        );
-                                      },
-                                    ),
-                                  ),*/
-                            ],
-                          ),
-                        )),
-                      ),
-                      SizedBox(
-                          //Aqui centraliza no meio da tela
-                          //width: MediaQuery.of(context).size.width,
-                          //height: MediaQuery.of(context).size.height * .75,
-                          child: Center(
-                        child: Text(
-                          "Transações",
-                          style:
-                              TextStyle(fontSize: 25, color: Colors.blueGrey),
+    return StreamBuilder<Object>(
+        stream: widget.paginaController.outScreenSize,
+        builder: (context, snapshot) {
+          return Container(
+              width: MediaQuery.of(context).size.width,
+              height: snapshot.hasData
+                  ? snapshot.data
+                  : MediaQuery.of(context).size.height * .789,
+              child: Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    backgroundColor: Colors.white,
+                    child: Stack(
+                      children: <Widget>[
+                        Icon(
+                          Icons.time_to_leave,
+                          color: Colors.blue,
                         ),
-                      )),
-                      /*Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.height * .65,
-                          child: StreamBuilder(
-                              stream: widget.pc.outTransacoes,
-                              builder: (context,
-                                  AsyncSnapshot<List<Transacao>> transacoes) {
-                                if (transacoes.hasData) {
-                                  return ListView.separated(
-                                      shrinkWrap: true,
-                                      itemBuilder: (context, index) {
-                                        return TransacaoItem(
-                                            transacoes.data[index]);
-                                      },
-                                      separatorBuilder: (context, index) {
-                                        return Divider(height: 16);
-                                      },
-                                      itemCount: transacoes.data.length);
-                                } else {
-                                  return Container();
-                                }
-                              })),*/
-                    ]),
-              ),
-            )));
+                        Positioned(
+                          child: Icon(
+                            Icons.add,
+                            color: Colors.green,
+                            size: 20,
+                          ),
+                          top: -5,
+                          right: -5,
+                        )
+                      ],
+                    ),
+                    onPressed: () {
+                      Dialogs().addCarroDlg(context);
+                    },
+                  ),
+                  backgroundColor: Colors.white,
+                  body: SingleChildScrollView(
+                    child: Container(
+                      child: Column(
+                          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.all(25.0),
+                              child: SizedBox(
+                                  //CARREGAMENTO DO PAGAMENTO CONTROLLER
+                                  child: Center(
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      "Meus Veículos",
+                                      style: TextStyle(fontSize: 20),
+                                    ),
+                                    /*Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: StreamBuilder(
+                                          stream: widget.pc.outSaldo,
+                                          initialData: 0,
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot snapshot) {
+                                            return Text(
+                                              snapshot.data.toString(),
+                                              style: TextStyle(fontSize: 20),
+                                            );
+                                          },
+                                        ),
+                                      ),*/
+                                  ],
+                                ),
+                              )),
+                            ),
+                            Container(
+                                width: MediaQuery.of(context).size.width,
+                                height:
+                                    MediaQuery.of(context).size.height * .65,
+                                child: StreamBuilder(
+                                    stream: widget.clc.outCarros,
+                                    builder: (context,
+                                        AsyncSnapshot<List<Carro>> carros) {
+                                      if (carros.hasData) {
+                                        return ListView.separated(
+                                            shrinkWrap: true,
+                                            itemBuilder: (context, index) {
+                                              return CarroItem(
+                                                  carros.data[index]);
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return Divider(height: 16);
+                                            },
+                                            itemCount: carros.data.length);
+                                      } else {
+                                        return Container();
+                                      }
+                                    })),
+                          ]),
+                    ),
+                  )));
+        });
   }
 
-  Widget TransacaoItem(Transacao t) {
-    String data = new DateFormat.yMd().add_Hm().format(t.created_at);
-    return ListTile(
-      title: getTransacaoText(t.referencia),
-      subtitle: Text(data),
-      trailing: Text('R\$ ${t.valor.toStringAsFixed(2)}'),
+  Widget CarroItem(Carro t) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Icon(
+                Icons.time_to_leave,
+                size: 60,
+                color: Color.fromARGB(255, t.R, t.G, t.B),
+              ),
+              Text(t.placa, style: TextStyle(fontSize: 22)),
+            ],
+          ),
+          Text(
+            t.modelo,
+            style: TextStyle(fontSize: 22),
+          ),
+        ],
+      ),
     );
   }
 

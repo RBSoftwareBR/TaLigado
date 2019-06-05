@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:kivaga/Objetos/Cidade.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kivaga/Objetos/Cidade.dart';
+import 'package:kivaga/Telas/Home/PaginaPrincipalController.dart';
 import 'package:kivaga/Telas/Map/CadastrarRuaController.dart';
 
 class CadastrarRuaPage extends StatefulWidget {
   Cidade cidade;
-  CadastrarRuaPage({this.cidade});
+  PagesController paginaController;
+  CadastrarRuaPage({this.cidade, this.paginaController});
   @override
   _CadastrarRuaPageState createState() => _CadastrarRuaPageState();
 }
@@ -18,118 +19,135 @@ class _CadastrarRuaPageState extends State<CadastrarRuaPage> {
   @override
   Widget build(BuildContext context) {
     final bool iOSorNotSelected = Platform.isIOS || (selectedPolyline == null);
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * .789,
-        child: Scaffold(floatingActionButton: FloatingActionButton(onPressed: (){
-          mc.SalvarRua();
-        },child:Icon(Icons.save,color:Colors.white),backgroundColor: Colors.blue,),
-            body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Center(
-              child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * .75,
-                child:StreamBuilder(stream:mc.outPolys ,builder: (context,AsyncSnapshot<Map<PolylineId, Polyline>> snap){
-                  return GoogleMap(onTap: (LatLng pos){
-                  print(pos);
-                  mc.addPoly(pos);
-                },
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(widget.cidade.localizacao.latitude,
-                        widget.cidade.localizacao.longitude),
-                    zoom: 17.0,
+    return StreamBuilder<Object>(
+        stream: widget.paginaController.outScreenSize,
+        builder: (context, snapshot) {
+          return Container(
+              width: MediaQuery.of(context).size.width,
+              height: snapshot.hasData
+                  ? snapshot.data
+                  : MediaQuery.of(context).size.height * .789,
+              child: Scaffold(
+                  floatingActionButton: FloatingActionButton(
+                    onPressed: () {
+                      mc.SalvarRua();
+                    },
+                    child: Icon(Icons.save, color: Colors.white),
+                    backgroundColor: Colors.blue,
                   ),
-                  polylines: snap.hasData
-                      ? Set<Polyline>.of(snap.data.values)
-                      : Set<Polyline>(),
-                  onMapCreated: _onMapCreated,
-                );
-                },) 
-              ),
-            ),
-           /* Expanded(
-              child: SingleChildScrollView(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Row(
+                  body: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Center(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * .75,
+                            child: StreamBuilder(
+                              stream: mc.outPolys,
+                              builder: (context,
+                                  AsyncSnapshot<Map<PolylineId, Polyline>>
+                                      snap) {
+                                return GoogleMap(
+                                  onTap: (LatLng pos) {
+                                    print(pos);
+                                    mc.addPoly(pos);
+                                  },
+                                  initialCameraPosition: CameraPosition(
+                                    target: LatLng(
+                                        widget.cidade.localizacao.latitude,
+                                        widget.cidade.localizacao.longitude),
+                                    zoom: 17.0,
+                                  ),
+                                  polylines: snap.hasData
+                                      ? Set<Polyline>.of(snap.data.values)
+                                      : Set<Polyline>(),
+                                  onMapCreated: _onMapCreated,
+                                );
+                              },
+                            )),
+                      ),
+                      /* Expanded(
+                  child: SingleChildScrollView(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Column(
+                        Row(
                           children: <Widget>[
-                            FlatButton(
-                              child: const Text('add'),
-                              onPressed: _add,
+                            Column(
+                              children: <Widget>[
+                                FlatButton(
+                                  child: const Text('add'),
+                                  onPressed: _add,
+                                ),
+                                FlatButton(
+                                  child: const Text('remove'),
+                                  onPressed:
+                                      (selectedPolyline == null) ? null : _remove,
+                                ),
+                                FlatButton(
+                                  child: const Text('toggle visible'),
+                                  onPressed: (selectedPolyline == null)
+                                      ? null
+                                      : _toggleVisible,
+                                ),
+                                FlatButton(
+                                  child: const Text('toggle geodesic'),
+                                  onPressed: (selectedPolyline == null)
+                                      ? null
+                                      : _toggleGeodesic,
+                                ),
+                              ],
                             ),
-                            FlatButton(
-                              child: const Text('remove'),
-                              onPressed:
-                                  (selectedPolyline == null) ? null : _remove,
-                            ),
-                            FlatButton(
-                              child: const Text('toggle visible'),
-                              onPressed: (selectedPolyline == null)
-                                  ? null
-                                  : _toggleVisible,
-                            ),
-                            FlatButton(
-                              child: const Text('toggle geodesic'),
-                              onPressed: (selectedPolyline == null)
-                                  ? null
-                                  : _toggleGeodesic,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Widget>[
-                            FlatButton(
-                              child: const Text('change width'),
-                              onPressed: (selectedPolyline == null)
-                                  ? null
-                                  : _changeWidth,
-                            ),
-                            FlatButton(
-                              child: const Text('change color'),
-                              onPressed: (selectedPolyline == null)
-                                  ? null
-                                  : _changeColor,
-                            ),
-                            FlatButton(
-                              child:
-                                  const Text('change start cap [Android only]'),
-                              onPressed:
-                                  iOSorNotSelected ? null : _changeStartCap,
-                            ),
-                            FlatButton(
-                              child:
-                                  const Text('change end cap [Android only]'),
-                              onPressed:
-                                  iOSorNotSelected ? null : _changeEndCap,
-                            ),
-                            FlatButton(
-                              child: const Text(
-                                  'change joint type [Android only]'),
-                              onPressed:
-                                  iOSorNotSelected ? null : _changeJointType,
-                            ),
-                            FlatButton(
-                              child:
-                                  const Text('change pattern [Android only]'),
-                              onPressed:
-                                  iOSorNotSelected ? null : _changePattern,
-                            ),
+                            Column(
+                              children: <Widget>[
+                                FlatButton(
+                                  child: const Text('change width'),
+                                  onPressed: (selectedPolyline == null)
+                                      ? null
+                                      : _changeWidth,
+                                ),
+                                FlatButton(
+                                  child: const Text('change color'),
+                                  onPressed: (selectedPolyline == null)
+                                      ? null
+                                      : _changeColor,
+                                ),
+                                FlatButton(
+                                  child:
+                                      const Text('change start cap [Android only]'),
+                                  onPressed:
+                                      iOSorNotSelected ? null : _changeStartCap,
+                                ),
+                                FlatButton(
+                                  child:
+                                      const Text('change end cap [Android only]'),
+                                  onPressed:
+                                      iOSorNotSelected ? null : _changeEndCap,
+                                ),
+                                FlatButton(
+                                  child: const Text(
+                                      'change joint type [Android only]'),
+                                  onPressed:
+                                      iOSorNotSelected ? null : _changeJointType,
+                                ),
+                                FlatButton(
+                                  child:
+                                      const Text('change pattern [Android only]'),
+                                  onPressed:
+                                      iOSorNotSelected ? null : _changePattern,
+                                ),
+                              ],
+                            )
                           ],
                         )
                       ],
-                    )
-                  ],
-                ),
-              ),
-            ),*/
-          ],
-        )));
+                    ),
+                  ),
+                ),*/
+                    ],
+                  )));
+        });
   }
 
   GoogleMapController controller;
@@ -297,14 +315,18 @@ class _CadastrarRuaPageState extends State<CadastrarRuaPage> {
       );
     });
   }
-                        
+
   List<LatLng> _createPoints() {
     final List<LatLng> points = <LatLng>[];
     final double offset = _polylineIdCounter.ceilToDouble();
-    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset, widget.cidade.localizacao.longitude));
-    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset, widget.cidade.localizacao.longitude));
-    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset, widget.cidade.localizacao.longitude));
-    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset, widget.cidade.localizacao.longitude));
+    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset,
+        widget.cidade.localizacao.longitude));
+    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset,
+        widget.cidade.localizacao.longitude));
+    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset,
+        widget.cidade.localizacao.longitude));
+    points.add(_createLatLng(widget.cidade.localizacao.latitude + offset,
+        widget.cidade.localizacao.longitude));
     return points;
   }
 

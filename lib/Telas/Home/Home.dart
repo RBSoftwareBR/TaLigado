@@ -17,6 +17,7 @@ import 'package:shimmer/shimmer.dart';
 
 final Color backgroundColor = Colors.white;
 
+// ignore: must_be_immutable
 class HomePage extends StatefulWidget {
   Helper h = new Helper();
   @override
@@ -36,7 +37,7 @@ class _HomePageState extends State<HomePage>
   PagamentoController pagamentoController;
   CarrosListController clc;
 
-  final PagesController pc = new PagesController(0);
+  PagesController pc;
   bool openedDL = false;
 
   PageController pageController;
@@ -52,7 +53,7 @@ class _HomePageState extends State<HomePage>
   Color c = Colors.black87;
   final GlobalKey<ScaffoldState> scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  KivagaLogo(context, m1, m2) {
+  kivagaLogo(context, m1, m2) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * m1,
       height: MediaQuery.of(context).size.height * m2,
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage>
         .animate(_controller);
   }
 
-  Separator(context) {
+  separator(context) {
     return Container(
         width: MediaQuery.of(context).size.width * .5,
         height: 2,
@@ -111,9 +112,10 @@ class _HomePageState extends State<HomePage>
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
+    pc = new PagesController(0, context);
     FirebaseDynamicLinks.instance.retrieveDynamicLink().then((v) {
       print('AQUI DINAMIC LINK DEMONIO');
-      Uri deepLink = null;
+      Uri deepLink;
       if (v != null) {
         deepLink = v.link;
       }
@@ -252,20 +254,20 @@ class _HomePageState extends State<HomePage>
                   ],
                 ),
                 SizedBox(height: 16),
-                Separator(context),
+                separator(context),
                 SizedBox(
                   height: 16,
                 ),
-                MenuButton(
+                menuButton(
                     context, 'Editar Perfil', Icons.person, false, () {}),
                 /* MenuButton(context, 'Adicionar Creditos', Icons.credit_card,
                     false, () {
 
                     }),*/
-                MenuButton(
+                menuButton(
                     context, 'Configurações', Icons.settings, false, () {}),
-                MenuButton(context, 'Ajuda', Icons.help, false, () {}),
-                MenuButton(context, 'Logout', Icons.exit_to_app, true, () {
+                menuButton(context, 'Ajuda', Icons.help, false, () {}),
+                menuButton(context, 'Logout', Icons.exit_to_app, true, () {
                   doLogout(context);
                 }),
               ],
@@ -281,7 +283,7 @@ class _HomePageState extends State<HomePage>
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
-  Widget MenuButton(context, text, icon, isLogout, onPress) {
+  Widget menuButton(context, text, icon, isLogout, onPress) {
     return Container(
         width: MediaQuery.of(context).size.width * .5,
         height: 40,
@@ -327,16 +329,16 @@ class _HomePageState extends State<HomePage>
           borderRadius: BorderRadius.all(Radius.circular(40)),
           elevation: 8,
           color: backgroundColor,
-          child: PageContent(context, snapshot),
+          child: pageContent(context, snapshot),
         ),
       ),
     );
   }
 
-  WidgetTopMenu(context, Widget page) {
+  widgetTopMenu(context, Widget page) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * .8,
+        height: MediaQuery.of(context).size.height * .3,
         padding: EdgeInsets.only(
           left: 0,
           right: 0,
@@ -371,7 +373,7 @@ class _HomePageState extends State<HomePage>
                         });
                       },
                     ),
-                    KivagaLogo(context, .2, .05),
+                    kivagaLogo(context, .2, .05),
                     Icon(Icons.settings, color: Colors.white),
                   ],
                 ),
@@ -380,18 +382,30 @@ class _HomePageState extends State<HomePage>
             ]));
   }
 
-  PageContent(context, snapshot) {
-    page2 = WidgetTopMenu(
-        context, Column(children: <Widget>[CarroListPage(clc: clc)]));
-
-    page3 = WidgetTopMenu(context,
-        Column(children: <Widget>[CadastrarRuaPage(cidade: Helper.OuroPreto)]));
-    page1 = WidgetTopMenu(context,
-        Column(children: <Widget>[PagamentoPage(pc: pagamentoController)]));
-    page0 = WidgetTopMenu(
+  pageContent(context, snapshot) {
+    page2 = widgetTopMenu(
         context,
         Column(children: <Widget>[
-          EstacionarPage(cidade: Helper.OuroPreto, pc: pagamentoController)
+          CarrosListPage(clc: clc, paginaController: pc)
+        ]));
+
+    page3 = widgetTopMenu(
+        context,
+        Column(children: <Widget>[
+          CadastrarRuaPage(cidade: Helper.OuroPreto, paginaController: pc)
+        ]));
+    page1 = widgetTopMenu(
+        context,
+        Column(children: <Widget>[
+          PagamentoPage(pc: pagamentoController, paginaController: pc)
+        ]));
+    page0 = widgetTopMenu(
+        context,
+        Column(children: <Widget>[
+          EstacionarPage(
+              cidade: Helper.OuroPreto,
+              pc: pagamentoController,
+              paginaController: pc)
         ]));
     return Container(
         width: MediaQuery.of(context).size.width,

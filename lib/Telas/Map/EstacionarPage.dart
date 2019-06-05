@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kivaga/Objetos/Cidade.dart';
 import 'package:kivaga/Objetos/Rua.dart';
+import 'package:kivaga/Telas/Home/PaginaPrincipalController.dart';
 import 'package:kivaga/Telas/Map/EstacionarController.dart';
 import 'package:kivaga/Telas/Payment/PagamentoController.dart';
 
 class EstacionarPage extends StatefulWidget {
   Cidade cidade;
   PagamentoController pc;
-  EstacionarPage({this.cidade, this.pc});
+  PagesController paginaController;
+  EstacionarPage({this.cidade, this.pc, this.paginaController});
   @override
   _EstacionarPageState createState() => _EstacionarPageState();
 }
@@ -22,99 +24,110 @@ class _EstacionarPageState extends State<EstacionarPage> {
   @override
   Widget build(BuildContext context) {
     ec = new EstacionarController();
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * .789,
-        child: Scaffold(
-            body: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * .04,
-                child: StreamBuilder(
-                  stream: widget.pc.outSaldo,
-                  initialData: 'R\$ 0,00',
-                  builder: (context, transacoes) {
-                    return Text(
-                      'Saldo Atual: R\$ ${transacoes.data}',
-                      style: TextStyle(
-                          color: Colors.orangeAccent,
-                          fontStyle: FontStyle.italic,
-                          fontSize: 26),
-                      textAlign: TextAlign.center,
-                    );
-                  },
-                ),
-              ),
-              Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width - 15,
-                  height: 1,
-                  color: Colors.blue,
-                ),
-              ),
-              Center(
-                  child: SizedBox(
+    return StreamBuilder<Object>(
+        stream: widget.paginaController.outScreenSize,
+        builder: (context, snapshot) {
+          return Container(
+              width: MediaQuery.of(context).size.width,
+              height: snapshot.hasData
+                  ? snapshot.data
+                  : MediaQuery.of(context).size.height * .789,
+              child: Scaffold(
+                  body: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                    Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height * .72,
+                      height: MediaQuery.of(context).size.height * .04,
                       child: StreamBuilder(
-                        stream: ec.outPolys,
-                        builder: (context,
-                            AsyncSnapshot<Map<PolylineId, Polyline>> snap) {
-                          return StreamBuilder(
-                            stream: ec.outrua,
-                            builder: (context, ruas) {
-                              return ruas.hasData
-                                  ? FutureBuilder(
-                                      future: getMarkers(ruas.data),
-                                      builder: (context, markers) {
-                                        return GoogleMap(
-                                          onTap: (LatLng pos) {
-                                            print(pos);
-                                          },
-                                          initialCameraPosition: CameraPosition(
-                                            target: LatLng(
-                                                widget.cidade.localizacao
-                                                    .latitude,
-                                                widget.cidade.localizacao
-                                                    .longitude),
-                                            zoom: 17.0,
-                                          ),
-                                          markers: ruas.hasData
-                                              ? markers.data
-                                              : Set<Marker>(),
-                                          polylines: snap.hasData
-                                              ? Set<Polyline>.of(
-                                                  snap.data.values)
-                                              : Set<Polyline>(),
-                                          onMapCreated: _onMapCreated,
-                                        );
-                                      })
-                                  : GoogleMap(
-                                      onTap: (LatLng pos) {
-                                        print(pos);
-                                      },
-                                      initialCameraPosition: CameraPosition(
-                                        target: LatLng(
-                                            widget.cidade.localizacao.latitude,
-                                            widget
-                                                .cidade.localizacao.longitude),
-                                        zoom: 17.0,
-                                      ),
-                                      markers: Set<Marker>(),
-                                      polylines: snap.hasData
-                                          ? Set<Polyline>.of(snap.data.values)
-                                          : Set<Polyline>(),
-                                      onMapCreated: _onMapCreated,
-                                    );
-                              ;
-                            },
+                        stream: widget.pc.outSaldo,
+                        initialData: 'R\$ 0,00',
+                        builder: (context, transacoes) {
+                          return Text(
+                            'Saldo Atual: R\$ ${transacoes.data}',
+                            style: TextStyle(
+                                color: Colors.orangeAccent,
+                                fontStyle: FontStyle.italic,
+                                fontSize: 26),
+                            textAlign: TextAlign.center,
                           );
                         },
-                      )))
-            ])));
+                      ),
+                    ),
+                    Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width - 15,
+                        height: 1,
+                        color: Colors.blue,
+                      ),
+                    ),
+                    Center(
+                        child: SizedBox(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * .72,
+                            child: StreamBuilder(
+                              stream: ec.outPolys,
+                              builder: (context,
+                                  AsyncSnapshot<Map<PolylineId, Polyline>>
+                                      snap) {
+                                return StreamBuilder(
+                                  stream: ec.outrua,
+                                  builder: (context, ruas) {
+                                    return ruas.hasData
+                                        ? FutureBuilder(
+                                            future: getMarkers(ruas.data),
+                                            builder: (context, markers) {
+                                              return GoogleMap(
+                                                onTap: (LatLng pos) {
+                                                  print(pos);
+                                                },
+                                                initialCameraPosition:
+                                                    CameraPosition(
+                                                  target: LatLng(
+                                                      widget.cidade.localizacao
+                                                          .latitude,
+                                                      widget.cidade.localizacao
+                                                          .longitude),
+                                                  zoom: 17.0,
+                                                ),
+                                                markers: ruas.hasData
+                                                    ? markers.data
+                                                    : Set<Marker>(),
+                                                polylines: snap.hasData
+                                                    ? Set<Polyline>.of(
+                                                        snap.data.values)
+                                                    : Set<Polyline>(),
+                                                onMapCreated: _onMapCreated,
+                                              );
+                                            })
+                                        : GoogleMap(
+                                            onTap: (LatLng pos) {
+                                              print(pos);
+                                            },
+                                            initialCameraPosition:
+                                                CameraPosition(
+                                              target: LatLng(
+                                                  widget.cidade.localizacao
+                                                      .latitude,
+                                                  widget.cidade.localizacao
+                                                      .longitude),
+                                              zoom: 17.0,
+                                            ),
+                                            markers: Set<Marker>(),
+                                            polylines: snap.hasData
+                                                ? Set<Polyline>.of(
+                                                    snap.data.values)
+                                                : Set<Polyline>(),
+                                            onMapCreated: _onMapCreated,
+                                          );
+                                    ;
+                                  },
+                                );
+                              },
+                            )))
+                  ])));
+        });
   }
 
   GoogleMapController controller;

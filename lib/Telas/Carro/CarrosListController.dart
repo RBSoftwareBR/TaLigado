@@ -27,20 +27,18 @@ class CarrosListController implements BlocBase {
           carros = new List<Carro>();
         }
         for (var c in carrs.documents) {
+          print('Carro AQUI ${c.data.toString()}');
           Carro t = Carro.fromJson(c.data);
-          if (carros.contains(t)) {
+          print('Carro depois do from json' + t.toString());
+          if (!carros.contains(t)) {
             carros.add(t);
           }
         }
         inCarros.add(carros);
       }).catchError((err) {
-        print('Err: ${err.toString()}');
+        print('Erro ao buscar Carros: ${err.toString()}');
       });
     }
-  }
-
-  void addCarro(Carro c) {
-    //TODO Adicionar Carro ao BD
   }
 
   @override

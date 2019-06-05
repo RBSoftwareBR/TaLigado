@@ -628,12 +628,12 @@ packages:
     source: hosted
     version: "0.3.14"
   keyboard_visibility:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: keyboard_visibility
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.2"
+    version: "0.5.6"
   latlong:
     dependency: "direct main"
     description:
