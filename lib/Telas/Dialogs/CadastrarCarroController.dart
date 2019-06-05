@@ -53,14 +53,22 @@ class CadastrarCarroController implements BlocBase {
     controllerCor.close();
   }
 
-  Future<bool> CadastrarCarro(cor, modelo, placa) {
-    carro.placa = placa;
-    carro.modelo = modelo;
-    carro.cor = cor;
-    carro.owner = Helper.localUser.id;
-    carrosRef.add(carro.toJson()).then((doc) {
-      carro.id = doc.documentID;
-      carrosRef.document(doc.documentID).updateData(carro.toJson());
-    });
+  Future<bool> CadastrarCarro(cor, modelo, placa, bool isEditing) {
+    if (!isEditing) {
+      carro.placa = placa;
+      carro.modelo = modelo;
+      carro.cor = cor;
+      carro.owner = Helper.localUser.id;
+      carrosRef.add(carro.toJson()).then((doc) {
+        carro.id = doc.documentID;
+        carrosRef.document(doc.documentID).updateData(carro.toJson());
+      });
+    } else {
+      carro.placa = placa;
+      carro.modelo = modelo;
+      carro.cor = cor;
+      carro.owner = Helper.localUser.id;
+      carrosRef.document(carro.id).updateData(carro.toJson());
+    }
   }
 }

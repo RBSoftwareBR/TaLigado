@@ -115,27 +115,31 @@ class _CarrosListPageState extends State<CarrosListPage> {
 
   Widget CarroItem(Carro t) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
+        padding: const EdgeInsets.all(8.0),
+        child: GestureDetector(
+          onTap: () {
+            Dialogs().addCarroDlg(context, carro: t);
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Icon(
-                Icons.time_to_leave,
-                size: 60,
-                color: Color.fromARGB(255, t.R, t.G, t.B),
+              Row(
+                children: <Widget>[
+                  Icon(
+                    Icons.time_to_leave,
+                    size: 60,
+                    color: Color.fromARGB(255, t.R, t.G, t.B),
+                  ),
+                  Text(t.placa, style: TextStyle(fontSize: 22)),
+                ],
               ),
-              Text(t.placa, style: TextStyle(fontSize: 22)),
+              Text(
+                t.modelo,
+                style: TextStyle(fontSize: 22),
+              ),
             ],
           ),
-          Text(
-            t.modelo,
-            style: TextStyle(fontSize: 22),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   getTransacaoText(String referencia) {

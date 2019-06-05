@@ -216,7 +216,6 @@ class Dialogs {
                                       value.toInt(),
                                     );
                                     ccc.UpdateCarColor(c);
-                                    Navigator.pop(context);
                                   },
                                   max: 255,
                                   min: 1,
@@ -235,7 +234,8 @@ class Dialogs {
               child: Text('Cadastrar', semanticsLabel: 'Registrar Veículo'),
               onPressed: () {
                 ccc.CadastrarCarro(controllerCor.text, controllerModelo.text,
-                    controllerPlaca.text); // Perform some action
+                    controllerPlaca.text, isEditing); // Perform some action
+                Navigator.pop(context);
               },
             ),
             FlatButton(
