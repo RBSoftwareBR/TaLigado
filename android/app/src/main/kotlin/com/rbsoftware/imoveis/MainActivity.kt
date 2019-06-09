@@ -1,4 +1,4 @@
-package com.rbsoftware.kivaga
+package com.rbsoftware.taligado
 
 import android.os.Bundle
 

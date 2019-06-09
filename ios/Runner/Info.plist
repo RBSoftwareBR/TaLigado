@@ -11,7 +11,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>kivaga</string>
+	<string>taligado</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -62,7 +62,7 @@
     <key>FacebookDisplayName</key>
 
     <!-- Replace "YOUR_APP_NAME" with your Facebook App name. -->
-    <string>kivaga</string>
+    <string>taligado</string>
 
     <key>LSApplicationQueriesSchemes</key>
     <array>
