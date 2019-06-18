@@ -38,7 +38,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                             width: 100.0,
                             child: new Text(
                               categoriesList.list[index]["name"],
-                              maxLines: 2,
+                              maxLines: 3,
                               textAlign: TextAlign.center,
                               overflow: TextOverflow.ellipsis,
                             ),

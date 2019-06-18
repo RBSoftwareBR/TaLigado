@@ -29,10 +29,6 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
   final FlutterWebviewPlugin flutterWebviewPlugin = new FlutterWebviewPlugin();
   final TextEditingController _controller = new TextEditingController();
   Future getData() async {
-    await globalStore.logIn;
-    if (await globalStore.userDatabaseReference == null) {
-      await globalStore.logIn;
-    }
     snapSources = await globalStore.articleSourcesDatabaseReference.once();
     var snap = await globalStore.articleDatabaseReference.once();
     if (snapSources.value != null) {
@@ -173,6 +169,10 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
     );
   }
 
+  Future ensureLogIn(BuildContext context) async {
+    await globalStore.ensureLoggedIn();
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -181,7 +181,9 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
         new Padding(
           padding: new EdgeInsets.all(0.0),
           child: new PhysicalModel(
-            color: Helpers.brightness ? Colors.black : Colors.white,
+            color: Helpers.brightness != null
+                ? Helpers.brightness ? Colors.black : Colors.white
+                : Colors.white,
             elevation: 3.0,
             child: new TextField(
               controller: _controller,
@@ -348,7 +350,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                                     data["articles"][index]);
                                               },
                                             ),
-                                            new IconButton(
+                                            /*  new IconButton(
                                               icon: buildButtonColumn(
                                                   Icons.not_interested),
                                               onPressed: () {
@@ -358,7 +360,7 @@ class _HomeFeedScreenState extends State<HomeFeedScreen> {
                                                     data["articles"][index]
                                                         ["source"]["name"]);
                                               },
-                                            ),
+                                            ),*/
                                           ],
                                         ),
                                       ],

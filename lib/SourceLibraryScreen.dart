@@ -140,23 +140,23 @@ class _SourceLibraryScreenState extends State<SourceLibraryScreen> {
               padding: const EdgeInsets.all(10.0),
               itemCount: sources == null ? 0 : sources['sources'].length,
               itemBuilder: (BuildContext context, int index) {
+                print(
+                  'AQUI CAPETA' + sources['sources'][index]['name'],
+                );
                 return new GridTile(
-                  footer: new Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        new Flexible(
-                          child: new SizedBox(
-                            height: 16.0,
-                            width: 100.0,
-                            child: new Text(
-                              sources['sources'][index]['name'],
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        )
-                      ]),
+                  footer: new Text(
+                    sources['sources'][index]['name']
+                            .toString()
+                            .contains('Google News')
+                        ? sources['sources'][index]['name']
+                            .toString()
+                            .replaceAll('Google News', 'GN')
+                        : sources['sources'][index]['name'].toString(),
+                    maxLines: 2,
+                    style: TextStyle(fontSize: 12),
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   child: new Container(
                     height: 500.0,
                     padding: const EdgeInsets.only(bottom: 5.0),

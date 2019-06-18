@@ -67,7 +67,7 @@ class _ArticleSourceScreenState extends State<ArticleSourceScreen> {
           });
       print('AQUI RESPONSE ' + response.body.toString());
     }
-    userDatabaseReference = databaseReference.child(globalStore.user.id);
+    userDatabaseReference = databaseReference.child(globalStore.user.uid);
     articleDatabaseReference = userDatabaseReference.child('articles');
     var snap = await articleDatabaseReference.once();
     if (mounted) {
