@@ -25,7 +25,7 @@ final GoogleSignIn _googleSignIn = GoogleSignIn(
     'https://www.googleapis.com/auth/contacts.readonly',
   ],
 );
-var articleDatabaseReference;
+DatabaseReference articleDatabaseReference;
 Future<Null> ensureLoggedIn() async {
   if (user != null) {
     analytics.logLogin();
@@ -73,10 +73,11 @@ class LoginController implements BlocBase {
 
   void createUser(String nome, foto) {
     Random r = new Random();
-
+String email =  nome.replaceAll(' ', '') + r.nextInt(999).toString() + '@hotmail.com';
+    print(email);
     _auth
         .createUserWithEmailAndPassword(
-            email: nome.trim() + r.nextInt(999).toString() + '@hotmail.com',
+            email:email,
             password: '123456')
         .then((fbuser) async {
       UserUpdateInfo upi = new UserUpdateInfo();
