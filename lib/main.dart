@@ -10,13 +10,16 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:taligado/twitter_topics_page.dart';
 
 import './BookmarkScreen.dart' as BookmarkScreen;
 import './CategoriesScreen.dart' as CategoriesScreen;
 import './HomePage.dart' as HomeFeedScreeen;
 import './SourceLibraryScreen.dart' as SourceLibraryScreen;
 import 'Helpers.dart';
+import 'PerfilPage.dart';
 import 'globalStore.dart';
 
 Future main() async {
@@ -119,8 +122,7 @@ class TaLigadoState extends State<TaLigado>
   @override
   Future initState() {
     super.initState();
-
-    controller = new TabController(vsync: this, length: 2);
+    controller = new TabController(vsync: this, length: 4);
   }
 
   @override
@@ -167,9 +169,10 @@ class TaLigadoState extends State<TaLigado>
                   ? new Material(
                       child: new TabBar(controller: controller, tabs: <Tab>[
                       new Tab(icon: new Icon(Icons.view_headline, size: 30.0)),
-                      //new Tab(icon: new Icon(Icons.view_module, size: 30.0)),
-                      //new Tab(icon: new Icon(Icons.explore, size: 30.0)),
+                      new Tab(icon: new Icon(MdiIcons.twitter, size: 30.0)),
+
                       new Tab(icon: new Icon(Icons.bookmark, size: 30.0)),
+                        new Tab(icon: new Icon(MdiIcons.account, size: 30.0)),
                     ]))
                   : Container(
                       height: 0,
@@ -184,9 +187,10 @@ class TaLigadoState extends State<TaLigado>
                   return snap.data != null
                       ? new TabBarView(controller: controller, children: <Widget>[
                           new HomeFeedScreeen.HomePage(),
-                          //new SourceLibraryScreen.SourceLibraryScreen(),
+                          new TwitterTopicsPage(),
                           //new CategoriesScreen.CategoriesScreen(),
                           new BookmarkScreen.BookmarksScreen(),
+                    PerfilPage(),
                         ])
                       : LoginPage(lc);
                 }

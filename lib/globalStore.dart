@@ -65,6 +65,7 @@ class LoginController implements BlocBase {
   Future<bool> isLogedIn() async {
     FirebaseUser u = await _auth.currentUser();
     inUser.add(u);
+
     user = u;
     print(" AQUI USUARIO" + u.toString());
     ensureLoggedIn();
@@ -73,30 +74,34 @@ class LoginController implements BlocBase {
 
   void createUser(String nome, foto) {
     Random r = new Random();
-String email =  nome.replaceAll(' ', '') + r.nextInt(999).toString() + '@hotmail.com';
+    String email =  nome.replaceAll(' ', '') + r.nextInt(999).toString() + '@hotmail.com';
     print(email);
     _auth
         .createUserWithEmailAndPassword(
             email:email,
             password: '123456')
         .then((fbuser) async {
-      UserUpdateInfo upi = new UserUpdateInfo();
-      if (foto != null) {
-        var pic = await _uploadFile(fbuser.uid, foto);
-
-        upi.photoUrl = pic;
-      }
-
-      upi.displayName = nome;
-      fbuser.updateProfile(upi).then((t) {
-        print('UPDATE USUARIO DEMONIO');
-        isLogedIn();
-      }).catchError((err) {
-        print('ERRO AQUI FDP ${err.toString()}');
-      });
+      updateProfile(nome,foto,fbuser);
     });
   }
 
+  Future updateProfile(nome, foto,FirebaseUser fbuser) async {
+    UserUpdateInfo upi = new UserUpdateInfo();
+    if (foto != null) {
+      if(foto!= fbuser.photoUrl) {
+        var pic = await _uploadFile(fbuser.uid, foto);
+        upi.photoUrl = pic;
+      }
+    }
+
+    upi.displayName = nome;
+    fbuser.updateProfile(upi).then((t) {
+      print('UPDATE USUARIO DEMONIO');
+      isLogedIn();
+    }).catchError((err) {
+      print('ERRO AQUI FDP ${err.toString()}');
+    });
+  }
   Future _uploadFile(uid, File file) async {
     print("AQUI FILE" + file.path);
     final StorageReference ref =
