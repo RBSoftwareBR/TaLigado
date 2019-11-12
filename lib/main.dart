@@ -209,38 +209,10 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Future getImage() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Row(
-              children: <Widget>[
-                FlatButton.icon(
-                  icon: const Icon(Icons.camera_alt, size: 18.0),
-                  label: const Text('Camera', semanticsLabel: 'Camera'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
                     File image =
                         await ImagePicker.pickImage(source: ImageSource.camera);
 
                     widget.lc.inImage.add(image);
-                  },
-                ),
-                FlatButton.icon(
-                  icon: const Icon(Icons.photo, size: 18.0),
-                  label: const Text('Galeria', semanticsLabel: 'Galeria'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    File image = await ImagePicker.pickImage(
-                        source: ImageSource.gallery);
-
-                    widget.lc.inImage.add(image);
-                  },
-                )
-              ],
-            ),
-          );
-        });
   }
 
   TextEditingController tec = new TextEditingController();

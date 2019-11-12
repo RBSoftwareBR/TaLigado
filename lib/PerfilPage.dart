@@ -20,40 +20,12 @@ class PerfilPage extends StatefulWidget {
 
 class _PerfilPageState extends State<PerfilPage> {
   Future getImage() async {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: Row(
-              children: <Widget>[
-                FlatButton.icon(
-                  icon: const Icon(Icons.camera_alt, size: 18.0),
-                  label: const Text('Camera', semanticsLabel: 'Camera'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
-                    File image =
-                        await ImagePicker.pickImage(source: ImageSource.camera);
 
-                    lc.inImage.add(image);
-                    lc.updateProfile(user.displayName, image, user);
-                  },
-                ),
-                FlatButton.icon(
-                  icon: const Icon(Icons.photo, size: 18.0),
-                  label: const Text('Galeria', semanticsLabel: 'Galeria'),
-                  onPressed: () async {
-                    Navigator.of(context).pop();
                     File image = await ImagePicker.pickImage(
                         source: ImageSource.gallery);
 
                     lc.inImage.add(image);
                     lc.updateProfile(user.displayName, image, user);
-                  },
-                )
-              ],
-            ),
-          );
-        });
   }
 
   LoginController lc;
