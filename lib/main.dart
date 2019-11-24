@@ -170,9 +170,8 @@ class TaLigadoState extends State<TaLigado>
                       child: new TabBar(controller: controller, tabs: <Tab>[
                       new Tab(icon: new Icon(Icons.view_headline, size: 30.0)),
                       new Tab(icon: new Icon(MdiIcons.twitter, size: 30.0)),
-
                       new Tab(icon: new Icon(Icons.bookmark, size: 30.0)),
-                        new Tab(icon: new Icon(MdiIcons.account, size: 30.0)),
+                      new Tab(icon: new Icon(MdiIcons.account, size: 30.0)),
                     ]))
                   : Container(
                       height: 0,
@@ -182,19 +181,20 @@ class TaLigadoState extends State<TaLigado>
             stream: lc.outUser,
             builder: (context, snap) {
               return StreamBuilder<Object>(
-                stream: null,
-                builder: (context, snapshot) {
-                  return snap.data != null
-                      ? new TabBarView(controller: controller, children: <Widget>[
-                          new HomeFeedScreeen.HomePage(),
-                          new TwitterTopicsPage(),
-                          //new CategoriesScreen.CategoriesScreen(),
-                          new BookmarkScreen.BookmarksScreen(),
-                    PerfilPage(),
-                        ])
-                      : LoginPage(lc);
-                }
-              );
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return snap.data != null
+                        ? new TabBarView(physics: NeverScrollableScrollPhysics(),
+                            controller: controller,
+                            children: <Widget>[
+                                new HomeFeedScreeen.HomePage(),
+                                new TwitterTopicsPage(),
+                                //new CategoriesScreen.CategoriesScreen(),
+                                new BookmarkScreen.BookmarksScreen(),
+                                PerfilPage(),
+                              ])
+                        : LoginPage(lc);
+                  });
             }));
   }
 }
@@ -209,10 +209,19 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   Future getImage() async {
-                    File image =
-                        await ImagePicker.pickImage(source: ImageSource.camera);
+    File image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
-                    widget.lc.inImage.add(image);
+    widget.lc.inImage.add(image);
+  }
+
+  void changeBrightness(bool claro) {
+    if (claro) {
+      DynamicTheme.of(context).setBrightness(Brightness.light);
+    } else {
+      DynamicTheme.of(context).setBrightness(Brightness.dark);
+    }
+    Helpers.brightness =
+        Theme.of(context).brightness == Brightness.dark ? false : true;
   }
 
   TextEditingController tec = new TextEditingController();
